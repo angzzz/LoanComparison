@@ -1,51 +1,34 @@
 package com.anjaleeps.loancomparison;
 
 import android.app.SearchManager;
-import android.content.Intent;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView textview;
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_search);
-        textview = (TextView) findViewById(R.id.search_result);
+        setContentView(R.layout.layout_main);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu,menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search_box).getActionView();
-        searchView.setQueryHint("Search Here");
-        searchView.setIconifiedByDefault(false);
+    public boolean onCreateOptionsMenu( Menu menu )
+    {
+        getMenuInflater().inflate( R.menu.search_menu, menu );
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
-            @Override
-            public boolean onQueryTextSubmit(String search){
-                return false;
-            }
+        // Add SearchWidget.
+        SearchManager searchManager = (SearchManager) getSystemService( Context.SEARCH_SERVICE );
+        SearchView searchView = (SearchView) menu.findItem( R.id.search_box ).getActionView();
 
-            @Override
-            public boolean onQueryTextChange(String search){
-                String result= "You have searched for "+search;
-                textview.setText(result);
-                return false;
-            }
-        });
+        searchView.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
 
-        return super.onCreateOptionsMenu(menu);
+        return super.onCreateOptionsMenu( menu );
     }
-
-
 
 }
