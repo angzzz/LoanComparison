@@ -1,51 +1,91 @@
 package com.anjaleeps.loancomparison;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.ImageView;
+
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
+
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView textview;
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
 
+    private SearchAdapter adapter;
+    private ListView listView;
+    private DBBackend db;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_search);
-        textview = (TextView) findViewById(R.id.search_result);
+        setContentView(R.layout.main_layout);
+
+        db = new DBBackend(MainActivity.this);
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });
+        listView.setVisibility(View.GONE);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu,menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search_box).getActionView();
-        searchView.setQueryHint("Search Here");
-        searchView.setIconifiedByDefault(false);
+        getMenuInflater().inflate( R.menu.search_menu, menu );
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+        // Add SearchWidget.
+        SearchManager searchManager = (SearchManager) getSystemService( Context.SEARCH_SERVICE );
+        SearchView searchView = (SearchView) menu.findItem( R.id.search_box ).getActionView();
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String search){
-                return false;
+            public void onClick(View v) {
+                listView.setVisibility(View.VISIBLE);
             }
+        });
 
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
-            public boolean onQueryTextChange(String search){
-                String result= "You have searched for "+search;
-                textview.setText(result);
+            public boolean onClose() {
+                listView.setVisibility(View.GONE);
+                listView.setAdapter(null);
                 return false;
             }
         });
 
-        return super.onCreateOptionsMenu(menu);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            @Override
+            public boolean onQueryTextChange(String query) {
+                if (!("".equals(query))) {
+                    List<Entry> dbObject = db.searchDatabase(query);
+                    adapter = new SearchAdapter(MainActivity.this, dbObject);
+                    listView.setAdapter(adapter);
+                }else{
+                    listView.setAdapter(null);
+                }
+                return true;
+            }
+        });
+
+
+        searchView.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
+
+        return super.onCreateOptionsMenu( menu );
     }
-
-
 
 }

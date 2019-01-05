@@ -3,16 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.anjaleeps.loancomparison.SearchActivity">
+
 
     <TextView
-        android:id="@+id/search_result"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:gravity="center"
-        android:padding="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textColor="@color/colorPrimaryDark"
-        />
+        android:layout_height="match_parent" />
+
 
 </RelativeLayout>
