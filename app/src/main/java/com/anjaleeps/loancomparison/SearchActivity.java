@@ -1,5 +1,6 @@
 package com.anjaleeps.loancomparison;
 
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -18,12 +19,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity{
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_search);
-
 
         handleIntent(getIntent());
     }
@@ -33,6 +33,7 @@ public class SearchActivity extends AppCompatActivity {
         handleIntent(intent);
     }
 
+
     private void handleIntent(@NonNull Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
@@ -41,13 +42,11 @@ public class SearchActivity extends AppCompatActivity {
                             //SampleRecentSuggestionProvider.AUTHORITY,
                             //SampleRecentSuggestionProvider.MODE);
             //suggestions.saveRecentQuery(query, null);
+
             doSearch(query);
         }
     }
 
     public void doSearch(String query) {
     }
-
-
-
 }

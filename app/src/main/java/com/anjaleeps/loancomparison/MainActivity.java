@@ -11,13 +11,15 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.Menu;
 import android.widget.SearchView;
 
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
-
 
     private SearchAdapter adapter;
     private ListView listView;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.main_layout);
 
         db = new DBBackend(MainActivity.this);
@@ -42,11 +45,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
+
+        setContentView(R.layout.layout_main);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu )
+    {
+
         getMenuInflater().inflate( R.menu.search_menu, menu );
 
         // Add SearchWidget.
         SearchManager searchManager = (SearchManager) getSystemService( Context.SEARCH_SERVICE );
         SearchView searchView = (SearchView) menu.findItem( R.id.search_box ).getActionView();
+
 
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
 
         searchView.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
 
